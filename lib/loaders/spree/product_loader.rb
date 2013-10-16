@@ -88,25 +88,17 @@ module DataShift
           # Spree has some stock management stuff going on, so dont usually assign to column vut use
           # on_hand and on_hand=
           if(@load_object.variants.size > 0)
+            #puts "DEBUG: COUNT_ON_HAND PER VARIANT",current_value.is_a?(String),
 
-            if(current_value.to_s.include?(Delimiters::multi_assoc_delim))
+            # Check if we processed Option Types and assign count per option
+            values = current_value.to_s.split(Delimiters::multi_assoc_delim)
 
-              #puts "DEBUG: COUNT_ON_HAND PER VARIANT",current_value.is_a?(String),
-
-              # Check if we processed Option Types and assign count per option
-              values = current_value.to_s.split(Delimiters::multi_assoc_delim)
-
-              if(@load_object.variants.size == values.size)
-                @load_object.variants.each_with_index {|v, i| v.on_hand = values[i].to_i }
-                @load_object.save
-              else
-                puts "WARNING: Count on hand entries did not match number of Variants - None Set"
-              end
+            if(@load_object.variants.size == values.size)
+              @load_object.variants.each_with_index {|v, i| v.on_hand = values[i].to_i }
+              @load_object.save
             else
-              @load_object.variants.first.update_attribute(:on_hand , current_value)
+              puts "WARNING: Count on hand entries did not match number of Variants - None Set"
             end
-
-            # Can only set count on hand on Product if no Variants exist, else model throws
 
           elsif(@load_object.variants.size == 0)
             if(current_value.to_s.include?(Delimiters::multi_assoc_delim))
