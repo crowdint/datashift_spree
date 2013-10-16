@@ -109,6 +109,15 @@ module DataShift
             end
           end
 
+        elsif ['height', 'width', 'depth', 'position', 'weight'].include? @current_method_detail.operator && @load_object.variants.size > 0
+          values = current_value.to_s.split(Delimiters::multi_assoc_delim)
+          if(@load_object.variants.size == values.size)
+            @load_object.variants.each_with_index do |variant, i|
+              variant.update_attribute(@current_method_detail.operator.to_sym, current_value)
+            end
+          else
+            puts "WARNING: variant attributes entries did not match number of Variants - None Set"
+          end
         else
           super
         end
