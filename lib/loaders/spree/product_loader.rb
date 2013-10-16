@@ -102,6 +102,8 @@ module DataShift
               else
                 puts "WARNING: Count on hand entries did not match number of Variants - None Set"
               end
+            else
+              @load_object.variants.first.update_attribute(:on_hand , current_value)
             end
 
             # Can only set count on hand on Product if no Variants exist, else model throws
